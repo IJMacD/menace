@@ -1,31 +1,54 @@
 //@ts-check
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 
 import { colours } from './colours';
+import AI from './ai';
+import { valueToString, checkWinner } from './game';
+
+const ai = new AI();
 
 class App extends Component {
   constructor() {
     super();
 
+    const aiMode = true;
+
     this.state = {
-      value: 0,
-      nextPlayer: 'o',
+      aiMode,
+      value: aiMode ? ai.nextMove('o', 0) : 0,
+      nextPlayer: aiMode ? 'x' : 'o',
     };
 
+    this.reset = this.reset.bind(this);
     this.handleMove = this.handleMove.bind(this);
   }
 
+  reset () {
+    const aiMode = this.state.aiMode;
+    this.setState({
+      value: aiMode ? ai.nextMove('o', 0) : 0,
+      nextPlayer: aiMode ? 'x' : 'o',
+    });
+  }
+
   handleMove (pos) {
-    const {value, nextPlayer } = this.state;
+    let {value, nextPlayer, aiMode } = this.state;
     const strValue = valueToString(value);
 
     if (strValue[8-pos] !== " ") return;
 
+    value = value + (nextPlayer === 'o' ? 2 : 1) * Math.pow(3, pos);
+    nextPlayer = nextPlayer === 'o' ? 'x' : 'o';
+
+    if (aiMode) {
+      value = ai.nextMove(nextPlayer, value);
+      nextPlayer = nextPlayer === 'o' ? 'x' : 'o';
+    }
+
     this.setState({
-      value: value + (nextPlayer === 'o' ? 2 : 1) * Math.pow(3, pos),
-      nextPlayer: nextPlayer === 'o' ? 'x' : 'o',
+      value,
+      nextPlayer,
     });
   }
 
@@ -48,7 +71,7 @@ class App extends Component {
                 :
                 <p>{winner} Wins!</p>
               }
-              <button onClick={() => this.setState({ value: 0 })}>Reset</button>
+              <button onClick={this.reset}>Reset</button>
             </div>
           }
         </div>
@@ -114,29 +137,6 @@ function Board (props) {
       </tbody>
     </table>
   )
-}
-
-function valueToString (value) {
-  return value.toString(3).replace(/0/g, " ").replace(/1/g, "x").replace(/2/g, "o").padStart(9, " ");
-}
-
-function checkWinner(value) {
-  const sv = valueToString(value);
-
-  if(sv[0] !== " " && sv[0] === sv[1] && sv[0] === sv[2]) return sv[0];
-  if(sv[3] !== " " && sv[3] === sv[4] && sv[3] === sv[5]) return sv[3];
-  if(sv[6] !== " " && sv[6] === sv[7] && sv[6] === sv[8]) return sv[6];
-
-  if(sv[0] !== " " && sv[0] === sv[3] && sv[0] === sv[6]) return sv[0];
-  if(sv[1] !== " " && sv[1] === sv[4] && sv[1] === sv[7]) return sv[1];
-  if(sv[2] !== " " && sv[2] === sv[5] && sv[2] === sv[8]) return sv[2];
-
-  if(sv[0] !== " " && sv[0] === sv[4] && sv[0] === sv[8]) return sv[0];
-  if(sv[2] !== " " && sv[2] === sv[4] && sv[2] === sv[6]) return sv[2];
-
-  if (!sv.includes(" ")) return "-";
-
-  return false;
 }
 
 function ColourBoard (props) {
