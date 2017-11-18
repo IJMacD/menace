@@ -1,5 +1,5 @@
 //@ts-check
-import { valueToString, checkWinner } from './game.js';
+import { valueToString, checkWinner } from './game';
 
 export default class AI {
   constructor () {
@@ -18,11 +18,12 @@ export default class AI {
 
     if (this.checkFinished(player, value)) return value;
 
-    const beadTotal = countBeads(this.map[value]);
+    let beadTotal = countBeads(this.map[value]);
 
     if (beadTotal < 1) {
-      console.error("AI Died");
-      return value;
+      // Revive
+      this.map[value] = generateBox(value);
+      beadTotal = countBeads(this.map[value]);
     }
 
     const randomBead = Math.floor(Math.random() * beadTotal);
@@ -42,14 +43,12 @@ export default class AI {
     this.moves.forEach(([value,pos]) => {
       this.map[value][pos] += 3;
     });
-    console.log("Wahooo!", this.map);
   }
 
   handleLoss () {
     this.moves.forEach(([value,pos]) => {
       this.map[value][pos] = Math.max(this.map[value][pos] - 1, 0);
     });
-    console.log("Shit", this.map);
   }
 
   checkFinished (player, value) {
@@ -62,12 +61,20 @@ export default class AI {
       else if (winner !== '-') {
         this.handleLoss();
       }
-      this.reset();
 
       return true;
     }
 
     return false;
+  }
+
+  peekBox (box) {
+    return this.map[box];
+  }
+
+  getLastMove () {
+    if (this.moves.length) return this.moves[this.moves.length-1];
+    return [];
   }
 }
 
@@ -75,15 +82,15 @@ function generateBox (value) {
   const strValue = valueToString(value);
 
   return [
-    strValue[8] === " " ? 1 : 0,
-    strValue[7] === " " ? 1 : 0,
-    strValue[6] === " " ? 1 : 0,
-    strValue[5] === " " ? 1 : 0,
-    strValue[4] === " " ? 1 : 0,
-    strValue[3] === " " ? 1 : 0,
-    strValue[2] === " " ? 1 : 0,
-    strValue[1] === " " ? 1 : 0,
     strValue[0] === " " ? 1 : 0,
+    strValue[1] === " " ? 1 : 0,
+    strValue[2] === " " ? 1 : 0,
+    strValue[3] === " " ? 1 : 0,
+    strValue[4] === " " ? 1 : 0,
+    strValue[5] === " " ? 1 : 0,
+    strValue[6] === " " ? 1 : 0,
+    strValue[7] === " " ? 1 : 0,
+    strValue[8] === " " ? 1 : 0,
   ];
 }
 

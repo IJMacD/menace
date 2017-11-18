@@ -1,6 +1,14 @@
 
 export function valueToString (value) {
-  return value.toString(3).replace(/0/g, " ").replace(/1/g, "x").replace(/2/g, "o").padStart(9, " ");
+  return value
+    .toString(3)
+    .replace(/0/g, " ")
+    .replace(/1/g, "x")
+    .replace(/2/g, "o")
+    .padStart(9, " ")
+    .split("")
+    .reverse()
+    .join("");
 }
 
 export function checkWinner(value) {
