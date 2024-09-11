@@ -1,4 +1,3 @@
-//@ts-check
 import React, { Component } from 'react';
 import './App.css';
 
@@ -9,8 +8,8 @@ import { valueToString, checkWinner } from './game';
 const ai = new AI();
 
 class App extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     const aiMode = true;
 
@@ -24,7 +23,7 @@ class App extends Component {
     this.handleMove = this.handleMove.bind(this);
   }
 
-  reset () {
+  reset() {
     ai.reset();
     const aiMode = this.state.aiMode;
     this.setState({
@@ -33,8 +32,8 @@ class App extends Component {
     });
   }
 
-  handleMove (pos) {
-    let {value, nextPlayer, aiMode } = this.state;
+  handleMove(pos) {
+    let { value, nextPlayer, aiMode } = this.state;
     const strValue = valueToString(value);
 
     if (strValue[pos] !== " ") return;
@@ -70,20 +69,20 @@ class App extends Component {
       <div className="App">
         <div className="App-intro">
           <Board style={{ margin: '0 auto' }}>{values}</Board>
-          { winner === false ?
+          {winner === false ?
             <div>
               <p>Next move: {this.state.nextPlayer}</p>
               <Board style={{ margin: '0 auto' }}>
                 {
                   colours.map((colour, i) => {
-                    return <div key={colour} style={{...dotStyle, backgroundColor: colour}} onClick={() => this.handleMove(i)} />;
+                    return <div key={colour} style={{ ...dotStyle, backgroundColor: colour }} onClick={() => this.handleMove(i)} />;
                   })
                 }
               </Board>
             </div>
             :
             <div>
-              { winner === "-" ?
+              {winner === "-" ?
                 <p>Draw!</p>
                 :
                 <p>{winner} Wins!</p>
@@ -100,7 +99,7 @@ class App extends Component {
   }
 }
 
-function Board (props) {
+function Board(props) {
   const style = {
     border: 'solid #999',
     width: 50,
@@ -110,39 +109,39 @@ function Board (props) {
   const values = React.Children.toArray(props.children);
 
   return (
-    <table style={{...props.style, borderCollapse: 'collapse'}}>
+    <table style={{ ...props.style, borderCollapse: 'collapse' }}>
       <tbody>
         <tr>
           <td
-            style={{...style, borderWidth: '0 0 1px 0'}}
+            style={{ ...style, borderWidth: '0 0 1px 0' }}
           >{values[0]}</td>
           <td
-            style={{...style, borderWidth: '0 0 1px 1px'}}
+            style={{ ...style, borderWidth: '0 0 1px 1px' }}
           >{values[1]}</td>
           <td
-            style={{...style, borderWidth: '0 0 1px 1px'}}
+            style={{ ...style, borderWidth: '0 0 1px 1px' }}
           >{values[2]}</td>
         </tr>
         <tr>
           <td
-            style={{...style, borderWidth: '0 0 1px 0'}}
+            style={{ ...style, borderWidth: '0 0 1px 0' }}
           >{values[3]}</td>
           <td
-            style={{...style, borderWidth: '0 0 1px 1px'}}
+            style={{ ...style, borderWidth: '0 0 1px 1px' }}
           >{values[4]}</td>
           <td
-            style={{...style, borderWidth: '0 0 1px 1px'}}
+            style={{ ...style, borderWidth: '0 0 1px 1px' }}
           >{values[5]}</td>
         </tr>
         <tr>
           <td
-            style={{...style, borderWidth: '0 0 0 0'}}
+            style={{ ...style, borderWidth: '0 0 0 0' }}
           >{values[6]}</td>
           <td
-            style={{...style, borderWidth: '0 0 0 1px'}}
+            style={{ ...style, borderWidth: '0 0 0 1px' }}
           >{values[7]}</td>
           <td
-            style={{...style, borderWidth: '0 0 0 1px'}}
+            style={{ ...style, borderWidth: '0 0 0 1px' }}
           >{values[8]}</td>
         </tr>
       </tbody>

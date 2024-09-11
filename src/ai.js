@@ -2,16 +2,16 @@
 import { valueToString, checkWinner } from './game';
 
 export default class AI {
-  constructor () {
+  constructor() {
     this.map = {};
-    this.reset();
-  }
-
-  reset () {
     this.moves = [];
   }
 
-  nextMove (player, value) {
+  reset() {
+    this.moves = [];
+  }
+
+  nextMove(player, value) {
     if (!this.map[value]) {
       this.map[value] = generateBox(value);
     }
@@ -39,19 +39,19 @@ export default class AI {
     return newValue;
   }
 
-  handleWin () {
-    this.moves.forEach(([value,pos]) => {
+  handleWin() {
+    this.moves.forEach(([value, pos]) => {
       this.map[value][pos] += 3;
     });
   }
 
-  handleLoss () {
-    this.moves.forEach(([value,pos]) => {
+  handleLoss() {
+    this.moves.forEach(([value, pos]) => {
       this.map[value][pos] = Math.max(this.map[value][pos] - 1, 0);
     });
   }
 
-  checkFinished (player, value) {
+  checkFinished(player, value) {
     const winner = checkWinner(value);
     if (winner !== false) {
 
@@ -68,17 +68,17 @@ export default class AI {
     return false;
   }
 
-  peekBox (box) {
+  peekBox(box) {
     return this.map[box];
   }
 
-  getLastMove () {
-    if (this.moves.length) return this.moves[this.moves.length-1];
+  getLastMove() {
+    if (this.moves.length) return this.moves[this.moves.length - 1];
     return [];
   }
 }
 
-function generateBox (value) {
+function generateBox(value) {
   const strValue = valueToString(value);
 
   return [
@@ -94,14 +94,14 @@ function generateBox (value) {
   ];
 }
 
-function countBeads (box) {
+function countBeads(box) {
   return box.reduce((x, t) => x + t, 0);
 }
 
-function findPos (box, bead) {
+function findPos(box, bead) {
   let count = 0;
-  for(let i in box) {
+  for (let i in box) {
     count += box[i];
-    if(bead < count) return i;
+    if (bead < count) return i;
   }
 }
